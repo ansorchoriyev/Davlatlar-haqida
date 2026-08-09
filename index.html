@@ -3,70 +3,350 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jahon Davlatlari</title>
+    <title>Jahon Davlatlari Pro</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Yangi shriftlar -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Roboto:wght@400;500;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <!-- Xarita uchun Leaflet kutubxonasi -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <header>
         <div class="header-container">
             <h1 id="siteTitle"><i class="fas fa-globe-americas"></i> Jahon Davlatlari</h1>
+            
+            <!-- Katta saytlar menyusi -->
+           <nav class="main-nav">
+    <button class="nav-btn active" data-target="homeSection"><i class="fas fa-home"></i> Asosiy</button>
+    <button class="nav-btn" data-target="compareSection"><i class="fas fa-balance-scale"></i> Taqqoslash</button>
+    <button class="nav-btn" data-target="quizSection"><i class="fas fa-gamepad"></i> Viktorina</button>
+    <button class="nav-btn" data-target="worldClocksSection"><i class="far fa-clock"></i> Dunyo Vaqtlari</button>
+    <button class="nav-btn" data-target="statsSection"><i class="fas fa-chart-pie"></i> Statistika</button>
+    <button class="nav-btn" data-target="gallerySection"><i class="fas fa-flag"></i> Galereya</button>
+</nav>
+
             <div class="header-controls">
-                <!-- Vaqt mintaqasini o'zgartiruvchi soat menyusi -->
-                <div class="timezone-box">
-                    <i class="fas fa-clock"></i>
-                    <select id="timezoneSelect">
-                        <option value="Asia/Tashkent">Toshkent (UTC+5)</option>
-                        <option value="Europe/London">London (UTC+0)</option>
-                        <option value="America/New_York">New York (UTC-5)</option>
-                        <option value="Asia/Tokyo">Tokio (UTC+9)</option>
-                        <option value="Europe/Moscow">Moskva (UTC+3)</option>
-                        <option value="Asia/Dubai">Duba (UTC+4)</option>
-                        <option value="Europe/Paris">Parij (UTC+1)</option>
-                        <option value="Asia/Seoul">Seul (UTC+9)</option>
-                    </select>
-                    <span id="liveClock">00:00:00</span>
-                </div>
-
-                <!-- 10 ta tilni tanlash menyusi -->
-                <select id="langSelect" class="lang-select">
-                    <option value="uz">O'zbekcha</option>
-                    <option value="en">English</option>
-                    <option value="ru">Русский</option>
-                    <option value="tr">Türkçe</option>
-                    <option value="ar">العربية</option>
-                    <option value="fr">Français</option>
-                    <option value="de">Deutsch</option>
-                    <option value="es">Español</option>
-                    <option value="zh">中文</option>
-                    <option value="ko">한국어</option>
-                </select>
-
                 <div class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" id="searchInput" placeholder="Davlat nomini qidiring...">
                 </div>
-                
-                <button id="themeToggle" class="theme-btn" title="Rejimni o'zgartirish">
-                    <i class="fas fa-moon"></i>
+                <!-- Sevimlilar tugmasi -->
+                <button id="favoritesFilterBtn" class="theme-btn" title="Sevimlilar">
+                    <i class="far fa-heart"></i>
+                </button>
+                <!-- AI Gid tugmasi -->
+                <button id="aiBotBtn" class="theme-btn" title="AI Gid">
+                    <i class="fas fa-robot"></i>
+                </button>
+                <button id="settingsBtn" class="theme-btn" title="Sozlamalar">
+                    <i class="fas fa-cog"></i>
                 </button>
             </div>
         </div>
     </header>
 
     <main>
-        <div id="loading" class="loading">
-            <i class="fas fa-spinner fa-spin"></i> Ma'lumotlar yuklanmoqda...
-        </div>
-        <div id="countriesGrid" class="grid-container hidden"></div>
+        <!-- 5. STATISTIKA PANELI BO'LIMI -->
+        <section id="statsSection" class="content-section hidden">
+            <div class="section-header">
+                <h2>Dunyodagi Umumiy Statistika</h2>
+                <p>Sayyoramiz bo'yicha eng muhim raqamlar va ko'rsatkichlar</p>
+            </div>
+            <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+                <div class="stat-card" style="background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center;">
+                    <i class="fas fa-globe" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 10px;"></i>
+                    <h3 style="font-size: 1rem; color: var(--text-muted);">Jami Davlatlar</h3>
+                    <p id="statTotalCountries" style="font-size: 1.6rem; font-weight: 800; margin-top: 5px;">0</p>
+                </div>
+                <div class="stat-card" style="background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center;">
+                    <i class="fas fa-users" style="font-size: 2rem; color: #16a34a; margin-bottom: 10px;"></i>
+                    <h3 style="font-size: 1rem; color: var(--text-muted);">Umumiy Aholi Soni</h3>
+                    <p id="statTotalPopulation" style="font-size: 1.4rem; font-weight: 800; margin-top: 5px;">0</p>
+                </div>
+                <div class="stat-card" style="background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center;">
+                    <i class="fas fa-mountain" style="font-size: 2rem; color: #ea580c; margin-bottom: 10px;"></i>
+                    <h3 style="font-size: 1rem; color: var(--text-muted);">Eng Katta Davlat</h3>
+                    <p id="statLargestCountry" style="font-size: 1.2rem; font-weight: 800; margin-top: 5px;">-</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. BAYROQLAR GALEREYASI BO'LIMI -->
+        <section id="gallerySection" class="content-section hidden">
+            <div class="section-header">
+                <h2>Bayroqlar Galereyasi</h2>
+                <p>Barcha davlatlarning bayroqlarini bir joyda tomosha qiling</p>
+            </div>
+            <div id="flagsGalleryGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px;">
+                <!-- JavaScript orqali barcha bayroqlar chiqadi -->
+            </div>
+        </section>
+        <!-- 1. ASOSIY BO'LIM (Davlatlar ro'yxati va Qit'alar filtri) -->
+        <section id="homeSection" class="content-section active">
+            <div class="region-filters">
+                <button class="region-btn active" data-region="all">Barchasi</button>
+                <button class="region-btn" data-region="Africa">Afrika</button>
+                <button class="region-btn" data-region="Americas">Amerika</button>
+                <button class="region-btn" data-region="Asia">Osiyo</button>
+                <button class="region-btn" data-region="Europe">Yevropa</button>
+                <button class="region-btn" data-region="Oceania">Okeaniya</button>
+            </div>
+
+            <div id="loading" class="loading"><i class="fas fa-spinner fa-spin"></i> Ma'lumotlar yuklanmoqda...</div>
+            <div id="countriesGrid" class="grid-container hidden"></div>
+            <!-- Sevimlilar topilmasa chiqadigan matn -->
+            <div id="noFavoritesMsg" class="hidden" style="text-align: center; margin-top: 50px; font-size: 1.2rem; color: var(--text-muted);">
+                <i class="far fa-folder-open" style="font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+                Hali hech qanday davlatni sevimlilarga qo'shmadingiz.
+            </div>
+        </section>
+
+        <!-- 2. TAQQOSLASH BO'LIMI -->
+        <section id="compareSection" class="content-section hidden">
+            <div class="section-header">
+                <h2>Ikkita davlatni taqqoslash</h2>
+                <p>Yonma-yon statistika va farqlarni ko'ring</p>
+            </div>
+            <div class="compare-container">
+                <div class="compare-box" id="compare1">
+                    <select id="compSelect1" class="setting-select"></select>
+                    <div id="compResult1" class="comp-result">Davlat tanlang</div>
+                </div>
+                <div class="compare-vs">VS</div>
+                <div class="compare-box" id="compare2">
+                    <select id="compSelect2" class="setting-select"></select>
+                    <div id="compResult2" class="comp-result">Davlat tanlang</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. O'YIN (VIKTORINA) BO'LIMI -->
+        <section id="quizSection" class="content-section hidden">
+            <div class="section-header">
+                <h2>Geografiya Viktorinasi</h2>
+                <p>Bilimingizni sinab ko'ring!</p>
+            </div>
+            <div class="quiz-container">
+                <button id="startQuizBtn" class="primary-btn"><i class="fas fa-play"></i> O'yinni boshlash</button>
+                <div id="quizGame" class="hidden">
+                    <h3 id="quizQuestion" style="margin-bottom: 20px; font-size: 1.5rem;">Bu qaysi davlat bayrog'i?</h3>
+                    <img id="quizImage" src="" style="width: 250px; border-radius: 10px; margin-bottom: 20px; display: none;">
+                    <div id="quizOptions" class="quiz-options"></div>
+                    <p id="quizScore" style="margin-top: 20px; font-weight: bold;">Hisob: 0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. DUNYO VAQTLARI BO'LIMI -->
+        <section id="worldClocksSection" class="content-section hidden">
+            <div class="section-header">
+                <h2>Dunyodagi Asosiy Vaqtlar</h2>
+                <p>Real vaqt rejimidagi soatlar paneli</p>
+            </div>
+            <div class="clocks-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px;">
+                <div class="clock-card" style="background:var(--card-bg); padding:20px; border-radius:16px; border:1px solid var(--border-color); text-align:center;">
+                    <h3>Toshkent (UTC+5)</h3><p id="utcTashkent" style="font-size:1.4rem; font-weight:bold; margin-top:10px;">00:00:00</p>
+                </div>
+                <div class="clock-card" style="background:var(--card-bg); padding:20px; border-radius:16px; border:1px solid var(--border-color); text-align:center;">
+                    <h3>London (UTC+0)</h3><p id="utcLondon" style="font-size:1.4rem; font-weight:bold; margin-top:10px;">00:00:00</p>
+                </div>
+                <div class="clock-card" style="background:var(--card-bg); padding:20px; border-radius:16px; border:1px solid var(--border-color); text-align:center;">
+                    <h3>New York (UTC-5)</h3><p id="utcNewYork" style="font-size:1.4rem; font-weight:bold; margin-top:10px;">00:00:00</p>
+                </div>
+                <div class="clock-card" style="background:var(--card-bg); padding:20px; border-radius:16px; border:1px solid var(--border-color); text-align:center;">
+                    <h3>Tokio (UTC+9)</h3><p id="utcTokyo" style="font-size:1.4rem; font-weight:bold; margin-top:10px;">00:00:00</p>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Modal Oynasi -->
+    <!-- AI Gid Chat Modali -->
+    <div id="aiModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 450px;">
+            <button class="close-btn" id="closeAiBtn">&times;</button>
+            <h3 style="margin-bottom: 15px; color: var(--primary-color);"><i class="fas fa-robot"></i> Sun'iy Intellekt Gid</h3>
+            <div id="aiChatBox" style="height: 250px; background: var(--row-bg); border-radius: 12px; padding: 15px; overflow-y: auto; margin-bottom: 15px; font-size: 0.9rem;">
+                Salom! Men sizning geografik yordamchingizman. Menga istalgan davlat haqida savol bering.
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="aiInput" placeholder="Savol yozing..." class="setting-select" style="margin: 0;">
+                <button id="aiSendBtn" class="primary-btn" style="padding: 0 15px;"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Davlat ma'lumoti Modali -->
     <div id="countryModal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
+        <div class="modal-content" style="max-width: 900px; padding: 0; overflow: hidden;">
+            <button class="close-btn" id="closeCountryBtn" style="z-index: 10; top: 10px; right: 10px;">&times;</button>
             <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Sozlamalar (Settings) Modali (30 ta til qo'shildi) -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-content settings-content">
+            <button class="close-btn" id="closeSettingsBtn">&times;</button>
+            <h2 style="margin-bottom: 25px; font-size: 1.5rem; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-sliders-h" style="color: var(--primary-color);"></i> Sozlamalar
+            </h2>
+            
+            <div class="settings-grid">
+                
+                <h3 class="settings-title">Asosiy Sozlamalar</h3>
+                
+                <div class="setting-item">
+                    <label>Tilni tanlang (30 ta til)</label>
+                    <select id="langSelect" class="setting-select">
+                        <option value="uz">O'zbekcha</option>
+                        <option value="en">English</option>
+                        <option value="ru">Русский</option>
+                        <option value="tr">Türkçe</option>
+                        <option value="ar">العربية</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="es">Español</option>
+                        <option value="zh">中文</option>
+                        <option value="ko">한국어</option>
+                        <option value="ja">日本語</option>
+                        <option value="hi">हिन्दी</option>
+                        <option value="fa">فارسی</option>
+                        <option value="kk">Қазақша</option>
+                        <option value="ky">Кыргызча</option>
+                        <option value="az">Azərbaycan</option>
+                        <option value="tk">Türkmençe</option>
+                        <option value="tg">Тоҷикӣ</option>
+                        <option value="uk">Українська</option>
+                        <option value="it">Italiano</option>
+                        <option value="pt">Português</option>
+                        <option value="pl">Polski</option>
+                        <option value="nl">Nederlands</option>
+                        <option value="vi">Tiếng Việt</option>
+                        <option value="id">Bahasa Indonesia</option>
+                        <option value="ms">Bahasa Melayu</option>
+                        <option value="th">ไทย</option>
+                        <option value="el">Ελληνικά</option>
+                        <option value="sv">Svenska</option>
+                        <option value="fi">Suomi</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label>Sayt dizayni</label>
+                    <button id="themeToggle" class="theme-btn" style="width: 100%; border-radius: 12px; display: flex; gap: 10px; padding: 12px; justify-content: center;">
+                        <i class="fas fa-moon"></i> <span id="themeText">Tungi rejim</span>
+                    </button>
+                </div>
+
+                <div class="setting-item">
+                    <label>Vaqt mintaqasi</label>
+                    <select id="timezoneSelect" class="setting-select">
+                        <option value="Asia/Tashkent">Toshkent (UTC+5)</option>
+                        <option value="Europe/London">London (UTC+0)</option>
+                        <option value="America/New_York">New York (UTC-5)</option>
+                        <option value="Asia/Tokyo">Tokio (UTC+9)</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label>Soat formati</label>
+                    <select id="timeFormatSelect" class="setting-select">
+                        <option value="24">24-soatlik</option>
+                        <option value="12">12-soatlik (AM/PM)</option>
+                    </select>
+                </div>
+
+                <h3 class="settings-title">Ko'rinish va Tartib</h3>
+
+                <div class="setting-item">
+                    <label>Davlatlarni saralash</label>
+                    <select id="sortSelect" class="setting-select">
+                        <option value="az">Alifbo bo'yicha (A-Z)</option>
+                        <option value="za">Alifbo bo'yicha (Z-A)</option>
+                        <option value="areaDesc">Maydoni (Katta-Kichik)</option>
+                        <option value="areaAsc">Maydoni (Kichik-Katta)</option>
+                        <option value="popDesc">Aholi soni (Ko'p-Kam)</option>
+                        <option value="popAsc">Aholi soni (Kam-Ko'p)</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label>Ko'rinish turi (Grid/List)</label>
+                    <select id="gridLayoutSelect" class="setting-select">
+                        <option value="300px">Katta kartochkalar</option>
+                        <option value="200px">Kichik grid</option>
+                        <option value="100%">Ro'yxat (List rejimi)</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label>Asosiy rang</label>
+                    <select id="primaryColorSelect" class="setting-select">
+                        <option value="#2563eb">Ko'k (Standart)</option>
+                        <option value="#16a34a">Yashil</option>
+                        <option value="#dc2626">Qizil</option>
+                        <option value="#9333ea">Siyohrang</option>
+                        <option value="#ea580c">To'q Sariq</option>
+                    </select>
+                </div>
+
+                <h3 class="settings-title">Dizayn Detallari</h3>
+
+                <div class="setting-item">
+                    <label>Shrift turi</label>
+                    <select id="fontFamilySelect" class="setting-select">
+                        <option value="'Nunito', sans-serif">Nunito (Yumshoq)</option>
+                        <option value="'Roboto', sans-serif">Roboto (Rasmiy)</option>
+                        <option value="'Space Mono', monospace">Monospace (Texnik)</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label>Shrift o'lchami</label>
+                    <select id="fontSizeSelect" class="setting-select">
+                        <option value="14px">Kichik</option>
+                        <option value="16px">Standart</option>
+                        <option value="18px">Katta</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label>Kartochka burchaklari</label>
+                    <select id="cardRadiusSelect" class="setting-select">
+                        <option value="18px">Yumshoq burchak</option>
+                        <option value="8px">Kichik burchak</option>
+                        <option value="0px">O'tkir burchak</option>
+                        <option value="30px">Sferik burchak</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label>Bayroq shakli</label>
+                    <select id="flagShapeSelect" class="setting-select">
+                        <option value="8px">To'rtburchak</option>
+                        <option value="50%">Yumaloq (Doira)</option>
+                        <option value="0px">O'tkir shakl</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label>Menyu (Header) holati</label>
+                    <select id="headerStyleSelect" class="setting-select">
+                        <option value="sticky">Yopishqoq (Doim tepada)</option>
+                        <option value="static">Oddiy (Skroll qilinadi)</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label>Animatsiyalar</label>
+                    <select id="animationsSelect" class="setting-select">
+                        <option value="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)">Yoqilgan (Silliq)</option>
+                        <option value="none">O'chirilgan (Tezkor)</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 
