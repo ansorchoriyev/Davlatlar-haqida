@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jahon Davlatlari</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1 id="siteTitle"><i class="fas fa-globe-americas"></i> Jahon Davlatlari</h1>
+            <div class="header-controls">
+                <!-- Vaqt mintaqasini o'zgartiruvchi soat menyusi -->
+                <div class="timezone-box">
+                    <i class="fas fa-clock"></i>
+                    <select id="timezoneSelect">
+                        <option value="Asia/Tashkent">Toshkent (UTC+5)</option>
+                        <option value="Europe/London">London (UTC+0)</option>
+                        <option value="America/New_York">New York (UTC-5)</option>
+                        <option value="Asia/Tokyo">Tokio (UTC+9)</option>
+                        <option value="Europe/Moscow">Moskva (UTC+3)</option>
+                        <option value="Asia/Dubai">Duba (UTC+4)</option>
+                        <option value="Europe/Paris">Parij (UTC+1)</option>
+                        <option value="Asia/Seoul">Seul (UTC+9)</option>
+                    </select>
+                    <span id="liveClock">00:00:00</span>
+                </div>
+
+                <!-- 10 ta tilni tanlash menyusi -->
+                <select id="langSelect" class="lang-select">
+                    <option value="uz">O'zbekcha</option>
+                    <option value="en">English</option>
+                    <option value="ru">Русский</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="ar">العربية</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="es">Español</option>
+                    <option value="zh">中文</option>
+                    <option value="ko">한국어</option>
+                </select>
+
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Davlat nomini qidiring...">
+                </div>
+                
+                <button id="themeToggle" class="theme-btn" title="Rejimni o'zgartirish">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Ma'lumotlar yuklanmoqda...
+        </div>
+        <div id="countriesGrid" class="grid-container hidden"></div>
+    </main>
+
+    <!-- Modal Oynasi -->
+    <div id="countryModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
